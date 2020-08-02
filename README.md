@@ -8,7 +8,7 @@ Aktuell werden readings der Geräte abgerufen und an FHEM übergeben.
 Die Erweiterung 72_VZugHome.pm muss in das entsprechende FHEM Verzeichnis kopiert werden, in der Regel ist das /opt/fhem/FHEM/
 
 # Haushaltsgerätes in FHEM definieren
-    define \<MyDeviceName\> VZugHome <appliance IP or DNS Name> <Timeout> <username> <passwword>
+    define <MyDeviceName> VZugHome <appliance IP or DNS Name> <Timeout> <username> <passwword>
 
 MyDeviceName    Beliebiger Name des Gerätes
 IP or DNS Name  IP Adresse oder DNS Name des Gerätest
@@ -17,6 +17,7 @@ Username        (Optional) Benutzername, falls für V-Zug-Home ein Benutzername 
 Password        (Optional) Passwort, falls für V-Zug-Home ein Benutzername und Passwort definiert wurde
 
 Beispiel:
+
     define EmmasBackofen VZugHome 192.168.0.55 3 edelweis myUser myPass
 
 # Attribute
