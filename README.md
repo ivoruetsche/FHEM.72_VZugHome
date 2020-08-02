@@ -23,7 +23,7 @@ Beispiel:
 # Attribute
     attr <MyDeviceName> Interval <Interval>
 
-* Interval: Sekunden, wie lange auf die nächste Statusabfrage gewartet werden soll (z.B. 15)
+* Interval: Sekunden, in welchem Intervall das Endgerät abgefragt werden soll (z.B. 15)
 
 Beispiel:
 
