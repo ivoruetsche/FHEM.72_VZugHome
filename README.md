@@ -4,10 +4,10 @@ Aktuell werden readings der Geräte abgerufen und an FHEM übergeben.
 
 Ältere Firmware Versionen der V-Zug-Home Module reagieren etwas zu Entspannt auf Anfrage und lehnen Anfragen ab, was bei neueren nur noch relativ selten vorkommt.  
 
-# Installation
+## Installation
 Die Erweiterung 72_VZugHome.pm muss in das entsprechende FHEM Verzeichnis kopiert werden, in der Regel ist das /opt/fhem/FHEM/
 
-# Haushaltsgerätes in FHEM definieren
+## Haushaltsgerätes in FHEM definieren
     define <MyDeviceName> VZugHome <appliance IP or DNS Name> <Timeout> <username> <passwword>
 
 * MyDeviceName: Beliebiger Name des Gerätes
@@ -16,18 +16,18 @@ Die Erweiterung 72_VZugHome.pm muss in das entsprechende FHEM Verzeichnis kopier
 * Username: \(Optional) Benutzername, falls für V-Zug-Home ein Benutzername und Passwort definiert wurde
 * Password: \(Optional) Passwort, falls für V-Zug-Home ein Benutzername und Passwort definiert wurde
 
-Beispiel:
+### Beispiel:
 
     define EmmasBackofen VZugHome 192.168.0.55 3 myUser myPass
 
-# Attribute
+## Attribute
     attr <MyDeviceName> Interval <Interval>
 
 * Interval: Sekunden, in welchem Intervall das Endgerät abgefragt werden soll (z.B. 15)
 
-Beispiel:
+### Beispiel:
 
     attr EmmasBackofen Interval 15
 
-# Readings
+## Readings
 Die Namen der Readings können je nach Endgerät verschieden sein und werden auch von diesem vergegeben. Es können sich auch Values von Endgerät zu Endgerät unterscheiden.
