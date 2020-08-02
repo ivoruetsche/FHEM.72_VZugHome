@@ -10,11 +10,11 @@ Die Erweiterung 72_VZugHome.pm muss in das entsprechende FHEM Verzeichnis kopier
 # Haushaltsgerätes in FHEM definieren
     define <MyDeviceName> VZugHome <appliance IP or DNS Name> <Timeout> <username> <passwword>
 
-*MyDeviceName: Beliebiger Name des Gerätes
-*IP or DNS Name: IP Adresse oder DNS Name des Gerätest
-*Timeout: Sekunden, wie lange FHEM auf die Antwort vom V-Zug-Home Gerät warten soll (z.B. 3)
-*Username: \(Optional) Benutzername, falls für V-Zug-Home ein Benutzername und Passwort definiert wurde
-*Password: \(Optional) Passwort, falls für V-Zug-Home ein Benutzername und Passwort definiert wurde
+* MyDeviceName: Beliebiger Name des Gerätes
+* IP or DNS Name: IP Adresse oder DNS Name des Gerätest
+* Timeout: Sekunden, wie lange FHEM auf die Antwort vom V-Zug-Home Gerät warten soll (z.B. 3)
+* Username: \(Optional) Benutzername, falls für V-Zug-Home ein Benutzername und Passwort definiert wurde
+* Password: \(Optional) Passwort, falls für V-Zug-Home ein Benutzername und Passwort definiert wurde
 
 Beispiel:
 
