@@ -37,10 +37,6 @@ sub VZugHome_CallingDeviceResult
     my $sDevType = $hash->{TYPE};
     my $sDevIp = $hash->{DevIP};
     my $sDevTimeout = $hash->{DevTimeout};
-    my $sDevRetries = $hash->{DevRetries};
-
-    my @hLoopLimit = (1..$sDevRetries);
-
     my $sLogHeader = "VZugHome_CallingDeviceResult $sDevName:";
 
     undef %hResCalling;
@@ -146,7 +142,6 @@ sub VZugHome_GetReadingUpdates
     my $sDevType = $hash->{TYPE};
     my $sDevIp = $hash->{DevIP};
     my $sDevTimeout = $hash->{DevTimeout};
-    my $sDevRetries = $hash->{DevRetries};
     my $sDevFhemState = $hash->{STATE};
     my $sLogHeader = "VZugHome_GetReadingUpdates $sDevName:";
     my $iInterval = $attr{$sDevName}{Interval};
@@ -268,12 +263,11 @@ sub VZugHome_Define
     my ( $hash, $def ) = @_;
     my @hDefParms = split( "[ \t][ \t]*", $def );
 
-    return "Usage: define <MyDeviceName> VZugHome <appliance IP or DNS Name> <Timeout> <Retries> <username> <passwword>" if(@hDefParms < 4);
+    return "Usage: define <MyDeviceName> VZugHome <appliance IP or DNS Name> <Timeout> <username> <passwword>" if(@hDefParms < 4);
     my $sDevName = $hDefParms[0];
     my $sDevType = $hDefParms[1];
     my $sDevIp = $hDefParms[2];
     my $sDevTimeout = $hDefParms[3];
-    my $sDevRetries = $hDefParms[4];
     my $sLogHeader = "VZugHome_Define $sDevName:";
 
     $hash->{STATE} = 'Initializing';
@@ -281,7 +275,6 @@ sub VZugHome_Define
     $hash->{TYPE} = $sDevType;
     $hash->{DevIP} = $sDevIp;
     $hash->{DevTimeout} = $sDevTimeout;
-    $hash->{DevRetries} = $sDevRetries;
 
 # Optional username and password for device access
     if ($hDefParms[5] and $hDefParms[6])
