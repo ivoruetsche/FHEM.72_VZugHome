@@ -18,7 +18,7 @@ Die Erweiterung 72_VZugHome.pm muss in das entsprechende FHEM Verzeichnis kopier
 
 Beispiel:
 
-    define EmmasBackofen VZugHome 192.168.0.55 3 edelweis myUser myPass
+    define EmmasBackofen VZugHome 192.168.0.55 3 myUser myPass
 
 # Attribute
     attr <MyDeviceName> Interval <Interval>
