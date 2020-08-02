@@ -1,5 +1,5 @@
 # FHEM.72_VZugHome
-Dieses Module ist ein Module für FHEM und bindet V-ZUG Haushaltsgeräte, welche mit der Erweiterung [V-ZUG-Home](https://home.vzug.com) ausgestattet sind in FHEM ein.
+Dieses Module ist für FHEM und bindet V-ZUG Haushaltsgeräte, welche mit der Erweiterung [V-ZUG-Home](https://home.vzug.com) ausgestattet sind in FHEM ein.
 Aktuell werden readings der Geräte abgerufen und an FHEM übergeben.
 
 Ältere Firmware Versionen der V-Zug-Home Module reagieren etwas zu Entspannt auf Anfrage und lehnen Anfragen ab, was bei neueren nur noch relativ selten vorkommt.  
