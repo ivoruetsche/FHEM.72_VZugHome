@@ -1,3 +1,10 @@
+     __      __   _______    _  _____        _    _  ____  __  __ ______                   ______ _    _ ______ __  __ 
+     \ \    / /  |___  / |  | |/ ____|      | |  | |/ __ \|  \/  |  ____|                 |  ____| |  | |  ____|  \/  |
+      \ \  / /_____ / /| |  | | |  __ ______| |__| | |  | | \  / | |__       ___  _ __    | |__  | |__| | |__  | \  / |
+       \ \/ /______/ / | |  | | | |_ |______|  __  | |  | | |\/| |  __|     / _ \| '_ \   |  __| |  __  |  __| | |\/| |
+        \  /      / /__| |__| | |__| |      | |  | | |__| | |  | | |____   | (_) | | | |  | |    | |  | | |____| |  | |
+         \/      /_____|\____/ \_____|      |_|  |_|\____/|_|  |_|______|   \___/|_| |_|  |_|    |_|  |_|______|_|  |_|
+
 # FHEM.72_VZugHome
 Dieses Module ist für FHEM und bindet V-ZUG Haushaltsgeräte, welche mit der Erweiterung [V-ZUG-Home](https://home.vzug.com) ausgestattet sind in FHEM ein.
 Aktuell werden readings der Geräte abgerufen und an FHEM übergeben.
