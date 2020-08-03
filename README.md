@@ -4,8 +4,23 @@ Aktuell werden readings der Geräte abgerufen und an FHEM übergeben.
 
 Ältere Firmware Versionen der V-Zug-Home Module reagieren etwas zu Entspannt auf Anfrage und lehnen Anfragen ab, was bei neueren nur noch relativ selten vorkommt.  
 
+### Versionierung
+0.1     03.08.2020  Alpha
+
 ## Installation
-Die Erweiterung 72_VZugHome.pm muss in das entsprechende FHEM Verzeichnis kopiert werden, in der Regel ist das /opt/fhem/FHEM/
+Die Erweiterung 72_VZugHome.pm muss in das entsprechende FHEM Verzeichnis kopiert werden, in der Regel ist das /opt/fhem/FHEM/ oder via [FHEM update](https://wiki.fhem.de/wiki/Update#Syntax_controlfile):
+
+Repository hinzufügen:
+    update add https://raw.githubusercontent.com/ivoruetsche/FHEM.72_VZugHome/master/controls_VZugHome.txt
+
+Auflisten der Repositories:
+    update list
+
+Check auf Updates:
+    update check
+
+V-Zug-Home Module hinzufügen/updaten:
+    update 72_VZugHome.pm
 
 ## Haushaltsgerätes in FHEM definieren
     define <MyDeviceName> VZugHome <appliance IP or DNS Name> <Timeout> <username> <passwword>
@@ -32,3 +47,8 @@ Die Erweiterung 72_VZugHome.pm muss in das entsprechende FHEM Verzeichnis kopier
 ## Readings
 Die Namen der Readings können je nach Endgerät verschieden sein und werden auch von diesem vergegeben. Es können sich auch Values von Endgerät zu Endgerät unterscheiden.
 
+# Offene Punkte
+- [ ] Error Code filtern bzw. auswerten (VzAiDeviceStatus.error.code, VzHhFwVersion.error.code, VzHhFwVersion.error.message)
+- [ ] Logging bereinigen (verbosity berücksichtigen, zur Zeit wird alles geloggt)
+- [ ] HTML Text für Hilfe schreiben
+- [ ] Code cleanup
