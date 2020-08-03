@@ -52,3 +52,4 @@ Die Namen der Readings können je nach Endgerät verschieden sein und werden auc
 - [ ] Logging bereinigen (verbosity berücksichtigen, zur Zeit wird alles geloggt)
 - [ ] HTML Text für Hilfe schreiben
 - [ ] Code cleanup
+- [ ] Mögliche Set's implementieren
