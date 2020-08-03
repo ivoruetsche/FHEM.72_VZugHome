@@ -33,6 +33,10 @@ V-Zug-Home Module hinzufügen/updaten:
 
 ### Beispiel:
 
+    define EmmasBackofen VZugHome 192.168.0.55 3
+
+Mit Benutzername und Passwort:
+
     define EmmasBackofen VZugHome 192.168.0.55 3 myUser myPass
 
 ## Attribute
