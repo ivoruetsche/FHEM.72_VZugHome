@@ -11,18 +11,22 @@ Aktuell werden readings der Geräte abgerufen und an FHEM übergeben.
 Die Erweiterung 72_VZugHome.pm muss in das entsprechende FHEM Verzeichnis kopiert werden, in der Regel ist das /opt/fhem/FHEM/ oder via [FHEM update](https://wiki.fhem.de/wiki/Update#Syntax_controlfile):
 
 Repository hinzufügen:
+
     update add https://raw.githubusercontent.com/ivoruetsche/FHEM.72_VZugHome/master/controls_VZugHome.txt
 
 Auflisten der Repositories:
+
     update list
 
 Check auf Updates:
+
     update check
 
 V-Zug-Home Module hinzufügen/updaten:
+
     update 72_VZugHome.pm
 
-## Haushaltsgerätes in FHEM definieren
+## Haushaltsgeräte in FHEM definieren
     define <MyDeviceName> VZugHome <appliance IP or DNS Name> <Timeout> <username> <passwword>
 
 * MyDeviceName: Beliebiger Name des Gerätes
@@ -35,7 +39,7 @@ V-Zug-Home Module hinzufügen/updaten:
 
     define EmmasBackofen VZugHome 192.168.0.55 3
 
-Mit Benutzername und Passwort:
+### Mit Benutzername und Passwort:
 
     define EmmasBackofen VZugHome 192.168.0.55 3 myUser myPass
 
