@@ -1,12 +1,11 @@
 #
-#  72_VZugHome.pm
+# 72_VZugHome.pm
 #
-# VZug
+# VZug 
 #                                                            
 
 package main;
 
-# Laden evtl. abhängiger Perl- bzw. FHEM-Hilfsmodule
 use HttpUtils;
 use JSON;
 
@@ -41,7 +40,6 @@ sub VZugHome_CallingDeviceResult
 
     undef %hResCalling;
 
-#if ($param) { my $sTmp = decode_json(%$param); }
     Log3 $sDevName, 4, "$sLogHeader: $sTmp: give me back: data: $data / error: $err";
 
     if (($err eq "") && ($data) && ($data ne 'UNDEF') && (substr($data,0,20) ne '{"error":{"code":500') && (substr($data,0,20) ne '{"error":{"code":503') && (substr($data,0,20) ne '{"error":{"code":400'))
