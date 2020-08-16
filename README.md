@@ -58,7 +58,7 @@ Die Namen der Readings können je nach Endgerät verschieden sein und werden auc
 # Offene Punkte
 - [ ] GET implementieren
 - [ ] Error Code filtern bzw. auswerten (VzAiDeviceStatus.error.code, VzHhFwVersion.error.code, VzHhFwVersion.error.message)
-- [ ] Logging bereinigen (verbosity berücksichtigen, zur Zeit wird alles geloggt)
-- [X] HTML Text für Hilfe schreiben
+- [X] Logging bereinigen (verbosity berücksichtigen, zur Zeit wird alles geloggt) (2020081602)
+- [X] HTML Text für Hilfe schreiben (2020081601)
 - [ ] Code cleanup
 - [ ] Mögliche Set's implementieren
