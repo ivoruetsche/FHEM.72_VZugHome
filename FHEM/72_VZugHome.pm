@@ -398,11 +398,98 @@ sub VZugHome_Undef
 # Beginn der Commandref
 
 =pod
-=item [helper|device|command]
-=item summary Kurzbeschreibung in Englisch was VZugHome steuert/unterstützt
-=item summary_DE Kurzbeschreibung in Deutsch was VZugHome steuert/unterstützt
+=item device
+=item summary Read status of V-Zug appliances with integrated V-Zug Home module
+=item summary_DE Liest den Status von V-Zug Haushaltsgeräten mit integrierter V-Zug Home Schnittstelle
 
 =begin html
+
+<a name="VZugHome"></a>
+<h3>V-Zug-Home</h3>
+
+<a name="VZugHomedefine"></a>
+  <b>Define</b>
+  <ul>
+    <code>define &lt;MyDeviceName&gt; VZugHome &lt;appliance IP or DNS Name&gt; &lt;timeout&gt; [&lt;username&gt; &lt;password&gt;]</code>
+    <br><br>
+    Defines a V-Zug-Home appliance at the given host address and you are able to get the status of the defined appliance.
+    <ul>
+        <li><code>Timeout</code> in seconds, how long FHEM should be wait for the answer.</li>
+        <li>For <code>username</code> and <code>password</code> protected appliances, you can give the username and password as optional parameter.</li>
+    </ul>
+    <br>
+    Example:
+    <ul>
+      <code>define EmmasBackofen VZugHome 192.168.0.55 3</code><br>
+      <code>define EmmasBackofen VZugHome 192.168.0.55 3 myUser myPass</code><br>
+    </ul>
+    <br>
+  </ul>
+  <br><br>
+
+<a name="VZugHomeattr"></a>
+  <b>Attributes</b>
+  <ul>
+    <code>attr &lt;MyDeviceName&gt; Interval &lt;Interval&gt;</code>
+    <br><br>
+    <ul>
+        <li><code>Interval</code> in seconds, time where the readings should be updated (10 - 300).</li>
+    </ul>
+    <br>
+    Example:
+    <ul>
+      <code>attr EmmasBackofen Interval 15</code><br>
+    </ul>
+    <br>
+  </ul>
+  <br><br>
+
+<a name="VZugHomereadings"></a>
+  <b>Readings</b>
+  <ul>
+    Readings are dynamic generated from the specified V-Zug appliance.
+    <br><br>
+    Example for a Adora SL Waschingmachine:
+        <table class="block wide readings">
+            <tr class="odd">
+                <td>VzAiDeviceStatus.DeviceName</td>
+                <td>Adora SL</td>
+            </tr>
+            <tr class="even">
+                <td>VzAiDeviceStatus.Inactive</td>
+                <td>false</td>
+            </tr>
+            <tr class="odd">
+                <td>VzAiDeviceStatus.Program</td>
+                <td>-</td>
+            </tr>
+            <tr class="even">
+                <td>VzAiDeviceStatus.ProgramEnd.End</td>
+                <td>-</td>
+            </tr>
+            <tr class="odd">
+                <td>VzAiDeviceStatus.ProgramEnd.EndType</td>
+                <td>0</td>
+            </tr>
+            <tr class="even">
+                <td>VzAiDeviceStatus.Serial</td>
+                <td>12345 123456</td>
+            </tr>
+            <tr class="odd">
+                <td>VzAiDeviceStatus.Status</td>
+                <td>-</td>
+            </tr>
+            <tr class="even">
+                <td>VzHhTime</td>
+                <td>2000-01-01T00:00:15</td>
+            </tr>
+        </table>
+    <br>
+    <br>
+  </ul>
+  <br><br>
+
+
  Englische Commandref in HTML
 =end html
 
