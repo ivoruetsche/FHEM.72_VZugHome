@@ -449,8 +449,8 @@ sub VZugHome_Undef
   <ul>
     Readings are dynamic generated from the specified V-Zug appliance.
     <br><br>
-    Example for a Adora SL Waschingmachine:
-        <table class="block wide readings">
+    Example for a Adora SL Washingmachine:
+        <table>
             <tr class="odd">
                 <td>VzAiDeviceStatus.DeviceName</td>
                 <td>Adora SL</td>
@@ -489,12 +489,95 @@ sub VZugHome_Undef
   </ul>
   <br><br>
 
-
- Englische Commandref in HTML
 =end html
 
 =begin html_DE
- Deutsche Commandref in HTML
+
+<a name="VZugHome"></a>
+<h3>V-Zug-Home</h3>
+
+<a name="VZugHomedefine"></a>
+  <b>Define</b>
+  <ul>
+    <code>define &lt;MyDeviceName&gt; VZugHome &lt;appliance IP or DNS Name&gt; &lt;timeout&gt; [&lt;username&gt; &lt;password&gt;]</code>
+    <br><br>
+    Definiert ein V-Zug-Home Haushaltsgerät, welches die angegebene IP oder Hostnamen besitzt. Damit können diverse Stati abgefragt werden.
+    <ul>
+        <li><code>Timeout</code> in Sekunden, wie lange FHEM auf eine Antwort warten soll.</li>
+        <li>Bei <code>username</code> und <code>password</code> geschützten Geräten, kann hier der Benutzername und das Passwort als Option mitgegeben werden.</li>
+    </ul>
+    <br>
+    Beispiele:
+    <ul>
+      <code>define EmmasBackofen VZugHome 192.168.0.55 3</code><br>
+      <code>define EmmasBackofen VZugHome 192.168.0.55 3 myUser myPass</code><br>
+    </ul>
+    <br>
+  </ul>
+  <br><br>
+
+<a name="VZugHomeattr"></a>
+  <b>Attributes</b>
+  <ul>
+    <code>attr &lt;MyDeviceName&gt; Interval &lt;Interval&gt;</code>
+    <br><br>
+    <ul>
+        <li><code>Interval</code> in Sekunden, in welchen Zeitabständen das Gerät abgefragt werden soll (10 - 300).</li>
+    </ul>
+    <br>
+    Example:
+    <ul>
+      <code>attr EmmasBackofen Interval 15</code><br>
+    </ul>
+    <br>
+  </ul>
+  <br><br>
+
+<a name="VZugHomereadings"></a>
+  <b>Readings</b>
+  <ul>
+    Readings werden dynamisch erzeugt und sind Gerätespezifisch.
+    <br><br>
+    Beispiel einer Adora SL Waschgmaschine:
+        <table>
+            <tr class="odd">
+                <td>VzAiDeviceStatus.DeviceName</td>
+                <td>Adora SL</td>
+            </tr>
+            <tr class="even">
+                <td>VzAiDeviceStatus.Inactive</td>
+                <td>false</td>
+            </tr>
+            <tr class="odd">
+                <td>VzAiDeviceStatus.Program</td>
+                <td>-</td>
+            </tr>
+            <tr class="even">
+                <td>VzAiDeviceStatus.ProgramEnd.End</td>
+                <td>-</td>
+            </tr>
+            <tr class="odd">
+                <td>VzAiDeviceStatus.ProgramEnd.EndType</td>
+                <td>0</td>
+            </tr>
+            <tr class="even">
+                <td>VzAiDeviceStatus.Serial</td>
+                <td>12345 123456</td>
+            </tr>
+            <tr class="odd">
+                <td>VzAiDeviceStatus.Status</td>
+                <td>-</td>
+            </tr>
+            <tr class="even">
+                <td>VzHhTime</td>
+                <td>2000-01-01T00:00:15</td>
+            </tr>
+        </table>
+    <br>
+    <br>
+  </ul>
+  <br><br>
+
 =end html
 
 # Ende der Commandref
