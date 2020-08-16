@@ -5,7 +5,8 @@ Aktuell werden readings der Geräte abgerufen und an FHEM übergeben.
 Ältere Firmware Versionen der V-Zug-Home Module reagieren etwas zu Entspannt auf Anfrage und lehnen Anfragen ab, was bei neueren nur noch relativ selten vorkommt.  
 
 ### Versionierung
-0.1     03.08.2020  Alpha
+    0.1     03.08.2020  Alpha
+    0.2     16.08.2020  Alpha
 
 ## Installation
 Die Erweiterung 72_VZugHome.pm muss in das entsprechende FHEM Verzeichnis kopiert werden, in der Regel ist das /opt/fhem/FHEM/ oder via [FHEM update](https://wiki.fhem.de/wiki/Update#Syntax_controlfile):
@@ -57,8 +58,8 @@ Die Namen der Readings können je nach Endgerät verschieden sein und werden auc
 
 # Offene Punkte
 - [ ] GET implementieren
-- [ ] Error Code filtern bzw. auswerten (VzAiDeviceStatus.error.code, VzHhFwVersion.error.code, VzHhFwVersion.error.message)
-- [ ] Logging bereinigen (verbosity berücksichtigen, zur Zeit wird alles geloggt)
-- [X] HTML Text für Hilfe schreiben
+- [ ] Error Code filtern bzw. auswerten (VzAiDeviceStatus.error.code, VzHhFwVersion.error.code, VzHhFwVersion.error.message) [400: OK / 500: OK / 503: OK (2020081603)] 
+- [X] Logging bereinigen (verbosity berücksichtigen, zur Zeit wird alles geloggt) (2020081602)
+- [X] HTML Text für Hilfe schreiben (2020081601)
 - [ ] Code cleanup
 - [ ] Mögliche Set's implementieren
