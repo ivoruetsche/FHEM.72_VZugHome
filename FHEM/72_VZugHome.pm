@@ -44,7 +44,7 @@ sub VZugHome_CallingDeviceResult
 #if ($param) { my $sTmp = decode_json(%$param); }
     Log3 $sDevName, 4, "$sLogHeader: $sTmp: give me back: data: $data / error: $err";
 
-    if (($err eq "") && ($data) && ($data ne 'UNDEF') && (substr($data,0,20) ne '{"error":{"code":500') && (substr($data,0,20) ne '{"error":{"code":400'))
+    if (($err eq "") && ($data) && ($data ne 'UNDEF') && (substr($data,0,20) ne '{"error":{"code":500') && (substr($data,0,20) ne '{"error":{"code":503') && (substr($data,0,20) ne '{"error":{"code":400'))
     {
 # Get related result type
         $sVzResType = %$hVzParamVal{"sResType"};
@@ -191,7 +191,6 @@ sub VZugHome_GetReadingUpdates
 
 
 #if ($hVzParamListUpd) { my $sTmp = decode_json($hVzParamListUpd); }
-#        Log3 $sDevName, 0, "$sLogHeader before while $sTmp";
         Log3 $sDevName, 5, "$sLogHeader Start While";
         while ((my $sVzParamKey, my $hVzParamVal) = each %hVzParamListUpd)
         {
