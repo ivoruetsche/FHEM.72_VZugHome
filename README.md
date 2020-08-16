@@ -6,6 +6,7 @@ Aktuell werden readings der Geräte abgerufen und an FHEM übergeben.
 
 ### Versionierung
 0.1     03.08.2020  Alpha
+
 0.2     16.08.2020  Alpha
 
 ## Installation
