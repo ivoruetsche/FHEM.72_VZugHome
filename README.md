@@ -56,7 +56,7 @@ V-Zug-Home Module hinzufügen/updaten:
 Die Namen der Readings können je nach Endgerät verschieden sein und werden auch von diesem vergegeben. Es können sich auch Values von Endgerät zu Endgerät unterscheiden.
 
 # Offene Punkte
-- [ ] GET inplementieren
+- [ ] GET implementieren
 - [ ] Error Code filtern bzw. auswerten (VzAiDeviceStatus.error.code, VzHhFwVersion.error.code, VzHhFwVersion.error.message)
 - [ ] Logging bereinigen (verbosity berücksichtigen, zur Zeit wird alles geloggt)
 - [X] HTML Text für Hilfe schreiben
