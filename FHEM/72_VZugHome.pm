@@ -1,7 +1,7 @@
 #
 # 72_VZugHome.pm
 #
-# VZug 
+# VZug [https://github.com/ivoruetsche/FHEM.72_VZugHome]
 #                                                            
 
 package main;
@@ -274,10 +274,10 @@ sub VZugHome_Define
     $hash->{DevTimeout} = $sDevTimeout;
 
 # Optional username and password for device access
-    if ($hDefParms[5] and $hDefParms[6])
+    if ($hDefParms[4] and $hDefParms[5])
     {
-        my $sVzUsername = $hDefParms[5];
-        my $sVzPassword = $hDefParms[6];
+        my $sVzUsername = $hDefParms[4];
+        my $sVzPassword = $hDefParms[5];
         $hash->{DevUsername} = $sVzUsername;
         $hash->{DevPassword} = $sVzPassword;
     }
