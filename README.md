@@ -9,7 +9,7 @@ Aktuell werden readings der Geräte abgerufen und an FHEM übergeben.
     0.2     16.08.2020  Alpha
 
 ## Installation
-Die Erweiterung 72_VZugHome.pm muss in das entsprechende FHEM Verzeichnis kopiert werden, in der Regel ist das /opt/fhem/FHEM/ oder via [FHEM update](https://wiki.fhem.de/wiki/Update#Syntax_controlfile):
+Die Erweiterung 72_VZugHome.pm muss in das entsprechende FHEM Verzeichnis kopiert werden, in der Regel ist das /opt/fhem/FHEM/ oder via [FHEM update](https://wiki.fhem.de/wiki/Update#update):
 
 Repository hinzufügen:
 
