@@ -42,25 +42,25 @@ sub VZugHome_CallingDeviceResult
     undef %hResCalling;
 
 #if ($param) { my $sTmp = decode_json(%$param); }
-    Log3 $sDevName, 0, "$sLogHeader: $sTmp: give me back: data: $data / error: $err";
+    Log3 $sDevName, 4, "$sLogHeader: $sTmp: give me back: data: $data / error: $err";
 
     if (($err eq "") && ($data) && ($data ne 'UNDEF') && (substr($data,0,20) ne '{"error":{"code":500') && (substr($data,0,20) ne '{"error":{"code":400'))
     {
 # Get related result type
         $sVzResType = %$hVzParamVal{"sResType"};
         $sVzResFunc = %$hVzParamVal{"sResFunc"};
-        Log3 $sDevName, 0, "$sLogHeader result should be $sVzResType / function is $sVzResFunc";
+        Log3 $sDevName, 5, "$sLogHeader result should be $sVzResType / function is $sVzResFunc";
 
         if ($sVzResFunc eq "Readings")
         {
             readingsBeginUpdate($hash);
-            Log3 $sDevName, 0, "$sLogHeader readingsBeginUpdate called";
+            Log3 $sDevName, 5, "$sLogHeader readingsBeginUpdate called";
         }
 
 # Check if result type is JSON and flat it
         if ($sVzResType eq "json")
         {
-            Log3 $sDevName, 0, "$sLogHeader result is json";
+            Log3 $sDevName, 5, "$sLogHeader result is json";
             $oVzDecJson = decode_json($data);
             if (ref $oVzDecJson eq 'HASH')
             {
@@ -84,26 +84,26 @@ sub VZugHome_CallingDeviceResult
                     }
                     elsif ($sVzResFunc eq "Readings")
                     {
-                        Log3 $sDevName, 0, "$sLogHeader Readings: $sVzIntFldName / $sVzResJsonVal";
+                        Log3 $sDevName, 4, "$sLogHeader Readings: $sVzIntFldName / $sVzResJsonVal";
                         readingsBulkUpdateIfChanged($hash, $sVzIntFldName, $sVzResJsonVal);
                     }
                     elsif ($sVzResFunc eq "IntCmd")
                     {
-                        Log3 $sDevName, 0, "$sLogHeader IntCmd: $sVzIntFldName / $sVzResJsonVal";
+                        Log3 $sDevName, 4, "$sLogHeader IntCmd: $sVzIntFldName / $sVzResJsonVal";
                     }
                     $hResCalling{$sVzIntFldName} = $sVzResJsonVal;
-                    Log3 $sDevName, 0, "$sLogHeader Result: $sVzIntFldName / $sVzResJsonVal";
+                    Log3 $sDevName, 4, "$sLogHeader Result: $sVzIntFldName / $sVzResJsonVal";
                 }
             }
             else
             {
                 my $sResType = ref $oVzDecJson;
-                Log3 $sDevName, 0, "$sLogHeader hash result expected, but it is $sResType";
+                Log3 $sDevName, 1, "$sLogHeader hash result expected, but it is $sResType";
             }
         }
         else
         {
-            Log3 $sDevName, 0, "$sLogHeader result is text";
+            Log3 $sDevName, 5, "$sLogHeader result is text";
             if ($data eq "") { $data = "-"; }
             if ($sVzResFunc eq "Internals")
             {
@@ -111,12 +111,12 @@ sub VZugHome_CallingDeviceResult
             }
             elsif ($sVzResFunc eq "Readings")
             {
-                Log3 $sDevName, 0, "$sLogHeader Readings: $sVzIntFldName / $sVzResJsonVal";
+                Log3 $sDevName, 4, "$sLogHeader Readings: $sVzIntFldName / $sVzResJsonVal";
                 readingsBulkUpdateIfChanged($hash, %$hVzParamVal{"sIntName"}, $data);
             }
             else
             {
-                Log3 $sDevName, 0, "$sLogHeader IntCmd: $sVzIntFldName / $sVzResJsonVal";
+                Log3 $sDevName, 4, "$sLogHeader IntCmd: $sVzIntFldName / $sVzResJsonVal";
             }
             $hResCalling{%$hVzParamVal{"sIntName"}} = $data;
         }
@@ -126,7 +126,7 @@ sub VZugHome_CallingDeviceResult
     }
     else
     {
-        Log3 $sDevName, 0, "$sLogHeader: $sVzDevUrl Error or timeout";
+        Log3 $sDevName, 2, "$sLogHeader: $sVzDevUrl Error or timeout";
     }
 
 #    return %hResCalling;
@@ -149,16 +149,16 @@ sub VZugHome_GetReadingUpdates
     my $sUsername = urlEncode($hash->{DevUsername});
     my $sPassword = urlEncode($hash->{DevPassword});
 
-    Log3 $sDevName, 0, "$sLogHeader is called [$sCalltype]";
+    Log3 $sDevName, 5, "$sLogHeader is called [$sCalltype]";
     $oVzCheckHostAlive = Net::Ping->new( );
 
     if ($oVzCheckHostAlive->ping($sDevIp,2))
     {
-        Log3 $sDevName, 0, "$sLogHeader Device is up $sDevIp [ping]";
+        Log3 $sDevName, 4, "$sLogHeader Device is up $sDevIp [ping]";
 
         if ($sCalltype eq "internals")
         {
-            Log3 $sDevName, 0, "$sLogHeader sub internals";
+            Log3 $sDevName, 5, "$sLogHeader sub internals";
             %hVzParamListUpd = (
                 "ai getDeviceStatus" => { sResFunc => 'Readings', sResType => 'json', sIntName => 'VzAiDeviceStatus' },
                 "ai getAPIVersion" => { sResFunc => 'Internals', sResType => 'json', sIntName => 'VzAiApiVersion' },
@@ -180,7 +180,7 @@ sub VZugHome_GetReadingUpdates
         if ($sCalltype eq "readings")
         {
 # Define V-Zug Home readings
-            Log3 $sDevName, 0, "$sLogHeader sub readings";
+            Log3 $sDevName, 5, "$sLogHeader sub readings";
             %hVzParamListUpd = (
                 "ai getDeviceStatus" => { sResFunc => 'Readings', sResType => 'json', sIntName => 'VzAiDeviceStatus' },
                 "hh getTime" => { sResFunc => 'Readings', sResType => 'text', sIntName => 'VzHhTime' },
@@ -192,10 +192,10 @@ sub VZugHome_GetReadingUpdates
 
 #if ($hVzParamListUpd) { my $sTmp = decode_json($hVzParamListUpd); }
 #        Log3 $sDevName, 0, "$sLogHeader before while $sTmp";
-        Log3 $sDevName, 0, "$sLogHeader Start While";
+        Log3 $sDevName, 5, "$sLogHeader Start While";
         while ((my $sVzParamKey, my $hVzParamVal) = each %hVzParamListUpd)
         {
-            Log3 $sDevName, 0, "$sLogHeader calling VZugHome_CallingDevice // $sVzParamKey </> $hVzParamVal ...";
+            Log3 $sDevName, 3, "$sLogHeader calling VZugHome_CallingDevice // $sVzParamKey </> $hVzParamVal ...";
 #            %hRes = VZugHome_CallingDevice ($hash, $sVzParamKey, $hVzParamVal);
 
             my @hReq = split / /, $sVzParamKey;
@@ -218,13 +218,13 @@ sub VZugHome_GetReadingUpdates
                         };
             HttpUtils_NonblockingGet($param);
         }
-        Log3 $sDevName, 0, "$sLogHeader End While";
+        Log3 $sDevName, 5, "$sLogHeader End While";
         $hash->{STATE} = 'active';
     }
     else
     {
         $hash->{STATE} = 'down';
-        Log3 $sDevName, 0, "$sLogHeader Device is down $sDevIp [ping] retry after 120 seconds";
+        Log3 $sDevName, 2, "$sLogHeader Device is down $sDevIp [ping] retry after 120 seconds";
         $iInterval = 120;
     }
     $oVzCheckHostAlive->close;
@@ -243,7 +243,7 @@ sub VZugHome_GetReadingUpdates
 sub VZugHome_Initialize
 {
     my ($hash) = @_;
-    Log3 $hash, 5, "VZugHome_Initialize: Start";
+    Log3 $hash, 0, "VZugHome_Initialize: Start";
 
     $hash->{DefFn}	= "VZugHome_Define";
     $hash->{UndefFn}	= "VZugHome_Undef";
@@ -285,13 +285,13 @@ sub VZugHome_Define
         $hash->{DevPassword} = $sVzPassword;
     }
 
-    Log3 $sDevName, 0, "$sLogHeader on $sDevIp called";
+    Log3 $sDevName, 5, "$sLogHeader on $sDevIp called";
 
     $oVzCheckHostAlive = Net::Ping->new( );
 #        or die "Can't create new ping object: $!\n";
     if ($oVzCheckHostAlive->ping($sDevIp,2))
     {
-        Log3 $sDevName, 0, "$sLogHeader Device is up $sDevIp [ping]";
+        Log3 $sDevName, 3, "$sLogHeader Device is up $sDevIp [ping]";
         my %hVzParamVal;
 # Define V-Zug Home requests
         my %hVzParamListDefine = (
@@ -337,7 +337,7 @@ sub VZugHome_Define
     else
     {
         $hash->{STATE} = 'down';
-        Log3 $sDevName, 0, "$sLogHeader Device is down $sDevIp [ping]";
+        Log3 $sDevName, 3, "$sLogHeader Device is down $sDevIp [ping]";
     }
     $oVzCheckHostAlive->close;
   
@@ -383,7 +383,7 @@ sub VZugHome_Undef
     my $sDevName = $hash->{NAME};
     my $sDevIp = $hash->{DevIP};
     
-    Log3 $sDevName, 0, "VZugHome_Undef $sDevName on $sDevIp called";
+    Log3 $sDevName, 5, "VZugHome_Undef $sDevName on $sDevIp called";
 
     RemoveInternalTimer($hash);
 
