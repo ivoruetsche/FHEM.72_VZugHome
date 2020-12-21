@@ -72,7 +72,7 @@ sub VZugHome_CallingDeviceResult
                     else
                     {
 # Remove non-ASCII characters and white spaces
-                        $sVzResJsonVal =~ s/[^[:ascii:]]//g; 
+                        $sVzResJsonVal =~ s/[^[:print:]]//g; 
                         $sVzResJsonVal =~ s/^\s+|\s+$//g
                     }
 
@@ -119,7 +119,7 @@ sub VZugHome_CallingDeviceResult
             $hResCalling{%$hVzParamVal{"sIntName"}} = $data;
         }
 
-        if ($sVzResFunc eq "Readings") { readingsEndUpdate($hash, 0); }
+        if ($sVzResFunc eq "Readings") { readingsEndUpdate($hash, 1); }
         $hash->{STATE} = 'active';
     }
     else
@@ -169,7 +169,6 @@ sub VZugHome_GetReadingUpdates
                 "hh getMachineType" => { sResFunc => 'Internals', sResType => 'text', sIntName => 'VzHhMachineType' },
                 "hh getModel" => { sResFunc => 'Internals', sResType => 'text', sIntName => 'VzHhModel' },
                 "hh getModelDescription" => { sResFunc => 'Internals', sResType => 'text', sIntName => 'VzHhModelDescription' },
-                "hh getSupportedLanguages" => { sResFunc => 'Internals', sResType => 'json', sIntName => 'VzHhSupportedLanguages' },
                 "hh getTime" => { sResFunc => 'Readings', sResType => 'text', sIntName => 'VzHhTime' },
             );
             $iInterval = 60;
@@ -303,7 +302,6 @@ sub VZugHome_Define
             "hh getMachineType" => { sResFunc => 'Internals', sResType => 'text', sIntName => 'VzHhMachineType' },
             "hh getModel" => { sResFunc => 'Internals', sResType => 'text', sIntName => 'VzHhModel' },
             "hh getModelDescription" => { sResFunc => 'Internals', sResType => 'text', sIntName => 'VzHhModelDescription' },
-            "hh getSupportedLanguages" => { sResFunc => 'Internals', sResType => 'json', sIntName => 'VzHhSupportedLanguages' },
             "hh getTime" => { sResFunc => 'Readings', sResType => 'text', sIntName => 'VzHhTime' },
         );
 
@@ -498,7 +496,7 @@ sub VZugHome_Undef
   <ul>
     <code>define &lt;MyDeviceName&gt; VZugHome &lt;appliance IP or DNS Name&gt; &lt;timeout&gt; [&lt;username&gt; &lt;password&gt;]</code>
     <br><br>
-    Definiert ein V-Zug-Home Haushaltsgerät, welches die angegebene IP oder Hostnamen besitzt. Damit können diverse Stati abgefragt werden.
+    Definiert ein V-Zug-Home Haushaltsgerät, welches die angegebene IP oder Hostnamen besitzt. Damit können diverse Status abgefragt werden.
     <ul>
         <li><code>Timeout</code> in Sekunden, wie lange FHEM auf eine Antwort warten soll.</li>
         <li>Bei <code>username</code> und <code>password</code> geschützten Geräten, kann hier der Benutzername und das Passwort als Option mitgegeben werden.</li>
