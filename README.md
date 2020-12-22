@@ -51,6 +51,3 @@ V-Zug-Home Module hinzufügen/updaten:
 
 ## Readings
 Die Namen der Readings können je nach Endgerät verschieden sein und werden auch von diesem vergegeben. Es können sich auch Values von Endgerät zu Endgerät unterscheiden.
-
-# Offene Punkte
---> Issues
