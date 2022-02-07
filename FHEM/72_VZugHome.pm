@@ -8,6 +8,8 @@ package main;
 
 use HttpUtils;
 use JSON;
+use utf8;
+use Encode qw(encode_utf8);
 
 use Net::Ping;
 
@@ -65,15 +67,16 @@ sub VZugHome_CallingDeviceResult
                 my $oVzFlatJson = VZugHome_flatten($oVzDecJson);
                 foreach my $sVzResJsonKey (keys %$oVzFlatJson)
                 {
-                    my $sVzResJsonVal = %$oVzFlatJson{$sVzResJsonKey};
+                    my $sVzResJsonVal = encode_utf8(%$oVzFlatJson{$sVzResJsonKey});
                     my $sVzIntFldName = %$hVzParamVal{"sIntName"} . "." . $sVzResJsonKey;
                     if ($sVzResJsonVal eq "")
                     { $sVzResJsonVal = "-"; } 
                     else
                     {
 # Remove non-ASCII characters and white spaces
-                        $sVzResJsonVal =~ s/[^[:print:]]//g; 
-                        $sVzResJsonVal =~ s/^\s+|\s+$//g
+#   Umlaute werden beim [:print:] mit raus gefiltert, da diese UTF8 sind
+#                        $sVzResJsonVal =~ s/[^[:print:]]//g;
+                        $sVzResJsonVal =~ s/^\s+|\s+$//g;
                     }
 
                     if ($sVzResFunc eq "Internals")
