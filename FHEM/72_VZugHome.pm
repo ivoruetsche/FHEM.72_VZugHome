@@ -40,15 +40,17 @@ sub VZugHome_CallingDeviceResult
     my $sDevTimeout = $hash->{DevTimeout};
     my $sLogHeader = "VZugHome_CallingDeviceResult $sDevName:";
 
-    undef %hResCalling;
+    # PATCH: statt globaler %hResCalling -> pro-Device in $hash->{helper}, damit
+    # mehrere gleichzeitig definierte VZugHome-Geräte sich nicht überschreiben
+    $hash->{helper}{ResCalling} = {};
 
-    Log3 $sDevName, 4, "$sLogHeader: $sTmp: give me back: data: $data / error: $err";
+    Log3 $sDevName, 4, "$sLogHeader: give me back: data: $data / error: $err";
 
     if (($err eq "") && ($data) && ($data ne 'UNDEF') && (substr($data,0,20) ne '{"error":{"code":500') && (substr($data,0,20) ne '{"error":{"code":503') && (substr($data,0,20) ne '{"error":{"code":400'))
     {
 # Get related result type
-        $sVzResType = %$hVzParamVal{"sResType"};
-        $sVzResFunc = %$hVzParamVal{"sResFunc"};
+        my $sVzResType = $hVzParamVal->{"sResType"};
+        my $sVzResFunc = $hVzParamVal->{"sResFunc"};
         Log3 $sDevName, 5, "$sLogHeader result should be $sVzResType / function is $sVzResFunc";
 
         if ($sVzResFunc eq "Readings")
@@ -61,14 +63,21 @@ sub VZugHome_CallingDeviceResult
         if ($sVzResType eq "json")
         {
             Log3 $sDevName, 5, "$sLogHeader result is json";
-            $oVzDecJson = decode_json($data);
-            if (ref $oVzDecJson eq 'HASH')
+
+            # PATCH: decode_json in eval kapseln - fehlerhaftes/unerwartetes JSON
+            # vom Gerät darf FHEM nicht mit einer Exception zum Absturz bringen
+            my $oVzDecJson = eval { decode_json($data) };
+            if ($@)
+            {
+                Log3 $sDevName, 1, "$sLogHeader could not decode JSON response: $@";
+            }
+            elsif (ref $oVzDecJson eq 'HASH')
             {
                 my $oVzFlatJson = VZugHome_flatten($oVzDecJson);
                 foreach my $sVzResJsonKey (keys %$oVzFlatJson)
                 {
-                    my $sVzResJsonVal = encode_utf8(%$oVzFlatJson{$sVzResJsonKey});
-                    my $sVzIntFldName = %$hVzParamVal{"sIntName"} . "." . $sVzResJsonKey;
+                    my $sVzResJsonVal = encode_utf8($oVzFlatJson->{$sVzResJsonKey});
+                    my $sVzIntFldName = $hVzParamVal->{"sIntName"} . "." . $sVzResJsonKey;
                     if ($sVzResJsonVal eq "")
                     { $sVzResJsonVal = "-"; } 
                     else
@@ -92,7 +101,7 @@ sub VZugHome_CallingDeviceResult
                     {
                         Log3 $sDevName, 4, "$sLogHeader IntCmd: $sVzIntFldName / $sVzResJsonVal";
                     }
-                    $hResCalling{$sVzIntFldName} = $sVzResJsonVal;
+                    $hash->{helper}{ResCalling}{$sVzIntFldName} = $sVzResJsonVal;
                     Log3 $sDevName, 4, "$sLogHeader Result: $sVzIntFldName / $sVzResJsonVal";
                 }
             }
@@ -106,20 +115,23 @@ sub VZugHome_CallingDeviceResult
         {
             Log3 $sDevName, 5, "$sLogHeader result is text";
             if ($data eq "") { $data = "-"; }
+            my $sVzIntFldName = $hVzParamVal->{"sIntName"};
             if ($sVzResFunc eq "Internals")
             {
-                $hash->{%$hVzParamVal{"sIntName"}} = $data;
+                $hash->{$sVzIntFldName} = $data;
             }
             elsif ($sVzResFunc eq "Readings")
             {
-                Log3 $sDevName, 4, "$sLogHeader Readings: $sVzIntFldName / $sVzResJsonVal";
-                readingsBulkUpdateIfChanged($hash, %$hVzParamVal{"sIntName"}, $data);
+                # PATCH: hier wurden zuvor die (nur im JSON-Zweig existierenden)
+                # Variablen $sVzIntFldName/$sVzResJsonVal aus dem falschen Scope geloggt
+                Log3 $sDevName, 4, "$sLogHeader Readings: $sVzIntFldName / $data";
+                readingsBulkUpdateIfChanged($hash, $sVzIntFldName, $data);
             }
             else
             {
-                Log3 $sDevName, 4, "$sLogHeader IntCmd: $sVzIntFldName / $sVzResJsonVal";
+                Log3 $sDevName, 4, "$sLogHeader IntCmd: $sVzIntFldName / $data";
             }
-            $hResCalling{%$hVzParamVal{"sIntName"}} = $data;
+            $hash->{helper}{ResCalling}{$sVzIntFldName} = $data;
         }
 
         if ($sVzResFunc eq "Readings") { readingsEndUpdate($hash, 1); }
@@ -127,10 +139,10 @@ sub VZugHome_CallingDeviceResult
     }
     else
     {
-        Log3 $sDevName, 2, "$sLogHeader: $sVzDevUrl Error or timeout";
+        Log3 $sDevName, 2, "$sLogHeader: $param->{url} Error or timeout";
     }
 
-#    return %hResCalling;
+#    return %{$hash->{helper}{ResCalling}};
 }
 
 #####################################################################################################################
@@ -143,15 +155,24 @@ sub VZugHome_GetReadingUpdates
     my $sDevType = $hash->{TYPE};
     my $sDevIp = $hash->{DevIP};
     my $sDevTimeout = $hash->{DevTimeout};
-    my $sDevFhemState = $hash->{STATE};
     my $sLogHeader = "VZugHome_GetReadingUpdates $sDevName:";
     my $iInterval = $attr{$sDevName}{Interval};
 
-    my $sUsername = urlEncode($hash->{DevUsername});
-    my $sPassword = urlEncode($hash->{DevPassword});
+    # PATCH: Zugangsdaten aus getKeyValue lesen (siehe VZugHome_Define)
+    my (undef, $sVzUsername) = getKeyValue($sDevName."_VZugHome_username");
+    my (undef, $sVzPassword) = getKeyValue($sDevName."_VZugHome_password");
+    my $sUsername = urlEncode($sVzUsername // '');
+    my $sPassword = urlEncode($sVzPassword // '');
 
     Log3 $sDevName, 5, "$sLogHeader is called [$sCalltype]";
-    $oVzCheckHostAlive = Net::Ping->new( );
+
+    # PATCH: pro-Device statt globalem $oVzCheckHostAlive; TCP-Ping gegen Port 80
+    # statt UDP-Echo (Default), da viele Geräte/Firewalls UDP-Echo nicht beantworten
+    my $oVzCheckHostAlive = Net::Ping->new("tcp", 2);
+    $oVzCheckHostAlive->port_number(80);
+
+    # PATCH: lokale statt globaler %hVzParamListUpd (Multi-Device-Problem)
+    my %hVzParamListUpd;
 
     if ($oVzCheckHostAlive->ping($sDevIp,2))
     {
@@ -189,13 +210,10 @@ sub VZugHome_GetReadingUpdates
             if ($iInterval < 10) { $iInterval = 15; }
         }
 
-
-#if ($hVzParamListUpd) { my $sTmp = decode_json($hVzParamListUpd); }
         Log3 $sDevName, 5, "$sLogHeader Start While";
         while ((my $sVzParamKey, my $hVzParamVal) = each %hVzParamListUpd)
         {
             Log3 $sDevName, 3, "$sLogHeader calling VZugHome_CallingDevice // $sVzParamKey </> $hVzParamVal ...";
-#            %hRes = VZugHome_CallingDevice ($hash, $sVzParamKey, $hVzParamVal);
 
             my @hReq = split / /, $sVzParamKey;
             my $sReqType = $hReq[0];
@@ -229,11 +247,11 @@ sub VZugHome_GetReadingUpdates
     $oVzCheckHostAlive->close;
 
 # Set new timer for next update
-    my $VzParamUpd = {
+    my $VzParamUpdNext = {
         hash     => $hash,
         calltype => $sCalltype
     };
-    InternalTimer(gettimeofday()+$iInterval, "VZugHome_GetReadingUpdates", $VzParamUpd);
+    InternalTimer(gettimeofday()+$iInterval, "VZugHome_GetReadingUpdates", $VzParamUpdNext);
 
     return undef;
 }
@@ -242,7 +260,7 @@ sub VZugHome_GetReadingUpdates
 sub VZugHome_Initialize
 {
     my ($hash) = @_;
-    Log3 $hash, 0, "VZugHome_Initialize: Start";
+    Log3 $hash, 5, "VZugHome_Initialize: Start";
 
     $hash->{DefFn}	= "VZugHome_Define";
     $hash->{UndefFn}	= "VZugHome_Undef";
@@ -275,23 +293,33 @@ sub VZugHome_Define
     $hash->{DevIP} = $sDevIp;
     $hash->{DevTimeout} = $sDevTimeout;
 
+    my $sUsername = '';
+    my $sPassword = '';
+
 # Optional username and password for device access
     if ($hDefParms[4] and $hDefParms[5])
     {
         my $sVzUsername = $hDefParms[4];
         my $sVzPassword = $hDefParms[5];
-        $hash->{DevUsername} = $sVzUsername;
-        $hash->{DevPassword} = $sVzPassword;
+
+        # PATCH: Zugangsdaten nicht mehr im Klartext als Internal (sichtbar in
+        # "list <device>"), sondern über FHEMs setKeyValue in der keyValue-Datei
+        setKeyValue($sDevName."_VZugHome_username", $sVzUsername);
+        setKeyValue($sDevName."_VZugHome_password", $sVzPassword);
+
+        $sUsername = $sVzUsername;
+        $sPassword = $sVzPassword;
     }
 
     Log3 $sDevName, 5, "$sLogHeader on $sDevIp called";
 
-    $oVzCheckHostAlive = Net::Ping->new( );
-#        or die "Can't create new ping object: $!\n";
+    # PATCH: pro-Device statt globaler $oVzCheckHostAlive; TCP-Ping statt UDP-Echo
+    my $oVzCheckHostAlive = Net::Ping->new("tcp", 2);
+    $oVzCheckHostAlive->port_number(80);
+
     if ($oVzCheckHostAlive->ping($sDevIp,2))
     {
         Log3 $sDevName, 3, "$sLogHeader Device is up $sDevIp [ping]";
-        my %hVzParamVal;
 # Define V-Zug Home requests
         my %hVzParamListDefine = (
             "ai getDeviceStatus" => { sResFunc => 'Readings', sResType => 'json', sIntName => 'VzAiDeviceStatus' },
@@ -321,8 +349,8 @@ sub VZugHome_Define
                             timeout     => $sDevTimeout,
                             method      => "GET",
                             noshutdown  => 1,
-                            user        => $sUsername,
-                            pwd         => $sPassword,
+                            user        => urlEncode($sUsername),
+                            pwd         => urlEncode($sPassword),
                             header      => "User-Agent: fhem_VZugHome/0.0.1\r\nAccept-Language: en",
                             hVzParamVal => $hVzParamVal,
                             hash        => $hash,
@@ -340,18 +368,19 @@ sub VZugHome_Define
     $oVzCheckHostAlive->close;
   
 #Set timer for internal update
-    my $VzParamUpd = {
+    my $VzParamUpdInternals = {
         hash     => $hash,
         calltype => "internals"
     };
-    InternalTimer(gettimeofday()+5, "VZugHome_GetReadingUpdates", $VzParamUpd);
+    InternalTimer(gettimeofday()+5, "VZugHome_GetReadingUpdates", $VzParamUpdInternals);
 
 #Set timer for readings update
-    my $VzParamUpd = {
+    # PATCH: eigener Variablenname statt zweiter "my $VzParamUpd" im selben Scope
+    my $VzParamUpdReadings = {
         hash     => $hash,
         calltype => "readings"
     };
-    InternalTimer(gettimeofday()+10, "VZugHome_GetReadingUpdates", $VzParamUpd);
+    InternalTimer(gettimeofday()+10, "VZugHome_GetReadingUpdates", $VzParamUpdReadings);
 
     return undef;
 }
@@ -364,6 +393,12 @@ sub VZugHome_Attr
     {
         if($attr_name eq "Interval")
         {
+            # PATCH: erst auf numerischen Wert prüfen, bevor er in einem Vergleich
+            # verwendet wird
+            if ($attr_value !~ /^\d+$/)
+            {
+                return "Invalid value $attr_value to $attr_name. Must be a number between 10 and 300.";
+            }
             if (($attr_value < 10) or ($attr_value > 300))
             {
                 my $err = "Invalid time $attr_value to $attr_name. Must be between 10 and 300.";
@@ -391,8 +426,6 @@ sub VZugHome_Undef
 # Eval-Rückgabewert für erfolgreiches
 # Laden des Moduls
 1;
-
-
 # Beginn der Commandref
 
 =pod
